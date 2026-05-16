@@ -1,0 +1,38 @@
+# Binaries
+bin/
+*.exe
+
+# Dependencies
+node_modules/
+vendor/
+
+# Build output
+web/dist/
+
+# Data
+data/*.db
+
+# Logs
+*.log
+server-stderr.log
+server-stdout.log
+ws-output.txt
+ws-error.txt
+
+# Test artifacts
+ws-test.js
+body.json
+kind.exe
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+package-lock.json
