@@ -4,10 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
+	"github.com/aamod/llm-infra-assistant/internal/k8s"
 )
 
 type applyRequest struct {
@@ -28,7 +30,21 @@ func (s *Server) handleApply(w http.ResponseWriter, r *http.Request) {
 
 	res, err := s.clusterManager.Apply(r.Context(), req.YAML)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		// Extract resource name from error for better classification
+		resource := extractResourceFromError(req.YAML)
+		applyErr := k8s.ClassifyError(err, resource)
+
+		statusCode := http.StatusInternalServerError
+		switch applyErr.Kind {
+		case k8s.ErrConflict:
+			statusCode = http.StatusConflict
+		case k8s.ErrValidation:
+			statusCode = http.StatusUnprocessableEntity
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(statusCode)
+		json.NewEncoder(w).Encode(applyErr)
 		return
 	}
 
@@ -89,4 +105,23 @@ func (s *Server) handleRollback(w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusOK, map[string]any{
 		"status": "ok",
 	})
+}
+
+// extractResourceFromError parses the YAML to find the resource name for error classification.
+func extractResourceFromError(yamlData string) string {
+	lines := strings.Split(yamlData, "\n")
+	var kind, name string
+	for _, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, "kind:") {
+			kind = strings.TrimSpace(strings.TrimPrefix(trimmed, "kind:"))
+		}
+		if strings.HasPrefix(trimmed, "name:") && name == "" {
+			name = strings.TrimSpace(strings.TrimPrefix(trimmed, "name:"))
+		}
+	}
+	if kind != "" && name != "" {
+		return kind + "/" + name
+	}
+	return "unknown"
 }
