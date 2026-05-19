@@ -1,30 +1,33 @@
 import { ChatInput } from './components/ChatInput';
 import { YamlEditor } from './components/YamlEditor';
-import { ClusterSidebar } from './components/ClusterSidebar';
-import { ApplyHistory } from './components/ApplyHistory';
-import { LiveStatusPanel } from './components/LiveStatusPanel';
+import { SystemContext } from './components/SystemContext';
+import { LiveDeployments } from './components/LiveDeployments';
+import { RecentActivity } from './components/RecentActivity';
+import { TopBar } from './components/TopBar';
+import { LeftSidebar } from './components/LeftSidebar';
 import './App.css';
 
 function App() {
   return (
     <div className="app-layout">
-      <header className="app-header">
-        <h1>LLM Infrastructure Assistant</h1>
-        <span className="app-subtitle">Natural language → Kubernetes YAML</span>
-      </header>
+      <LeftSidebar />
 
-      <main className="app-main">
-        <aside className="sidebar left-sidebar">
-          <ClusterSidebar />
-          <LiveStatusPanel />
-          <ApplyHistory />
-        </aside>
+      <div className="main-content">
+        <TopBar />
 
-        <div className="center-content">
-          <ChatInput />
-          <YamlEditor />
+        <div className="content-area">
+          <div className="center-panel">
+            <ChatInput />
+            <YamlEditor />
+          </div>
+
+          <div className="right-sidebar">
+            <SystemContext />
+            <LiveDeployments />
+            <RecentActivity />
+          </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

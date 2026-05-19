@@ -13,6 +13,12 @@ export interface ResourceStatus {
   message: string;
 }
 
+interface ActivityItem {
+  type: 'success' | 'update' | 'create' | 'error';
+  text: string;
+  time: string;
+}
+
 interface AppState {
   yaml: string;
   setYaml: (yaml: string) => void;
@@ -30,6 +36,9 @@ interface AppState {
   resourceStatuses: ResourceStatus[];
   upsertStatus: (s: ResourceStatus) => void;
   clearStatuses: () => void;
+
+  activities: ActivityItem[];
+  addActivity: (a: ActivityItem) => void;
 }
 
 export const useStore = create<AppState>((set) => ({
@@ -58,4 +67,7 @@ export const useStore = create<AppState>((set) => ({
       return { resourceStatuses: [...state.resourceStatuses, s] };
     }),
   clearStatuses: () => set({ resourceStatuses: [] }),
+
+  activities: [],
+  addActivity: (a) => set((state) => ({ activities: [a, ...state.activities].slice(0, 20) })),
 }));

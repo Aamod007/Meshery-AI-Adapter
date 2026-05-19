@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import Editor from '@monaco-editor/react';
 import { useStore } from '../store';
-import { Play } from 'lucide-react';
+import { Play, Copy, Check } from 'lucide-react';
 
 export function YamlEditor() {
   const yaml = useStore(state => state.yaml);
   const setYaml = useStore(state => state.setYaml);
   const addHistory = useStore(state => state.addHistory);
+  const addActivity = useStore(state => state.addActivity);
   const [applying, setApplying] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const handleApply = async () => {
     if (!yaml || applying) return;
@@ -26,24 +28,51 @@ export function YamlEditor() {
           resources: data.resources,
           appliedAt: data.applied_at
         });
-        alert('Applied successfully!');
+        addActivity({
+          type: 'success',
+          text: `Applied ${data.resources.length} resource(s) to cluster`,
+          time: new Date().toISOString()
+        });
       } else {
-        alert('Failed to apply: ' + data.message);
+        addActivity({
+          type: 'error',
+          text: `Apply failed: ${data.message || 'unknown error'}`,
+          time: new Date().toISOString()
+        });
       }
     } catch (e) {
-      alert('Error connecting to API');
+      addActivity({
+        type: 'error',
+        text: 'Error connecting to API',
+        time: new Date().toISOString()
+      });
     } finally {
       setApplying(false);
     }
   };
 
+  const handleCopy = async () => {
+    if (!yaml) return;
+    await navigator.clipboard.writeText(yaml);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
-    <div className="editor-container">
-      <div className="editor-header">
-        <h3>Manifest Viewer</h3>
-        <button className="apply-btn" onClick={handleApply} disabled={applying || !yaml}>
-          <Play size={16} /> {applying ? 'Applying...' : 'Apply to Cluster'}
-        </button>
+    <div className="editor-card">
+      <div className="editor-toolbar">
+        <span className="editor-filename">
+          <span style={{ color: '#8b949e' }}>manifest</span>.yaml
+        </span>
+        <div className="editor-actions">
+          <button className="copy-btn" onClick={handleCopy} disabled={!yaml}>
+            {copied ? <Check size={14} /> : <Copy size={14} />}
+            {copied ? 'Copied' : 'Copy'}
+          </button>
+          <button className="apply-btn" onClick={handleApply} disabled={applying || !yaml}>
+            <Play size={14} /> {applying ? 'Applying...' : 'Apply to Cluster'}
+          </button>
+        </div>
       </div>
       <div className="monaco-wrapper">
         <Editor
@@ -54,7 +83,11 @@ export function YamlEditor() {
           theme="vs-dark"
           options={{
             minimap: { enabled: false },
-            fontSize: 14,
+            fontSize: 13,
+            lineNumbers: 'on',
+            renderWhitespace: 'selection',
+            scrollBeyondLastLine: false,
+            padding: { top: 8 },
           }}
         />
       </div>

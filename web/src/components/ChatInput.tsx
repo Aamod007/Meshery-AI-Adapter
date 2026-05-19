@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Send, RefreshCw } from 'lucide-react';
+import { RefreshCw, Sparkles } from 'lucide-react';
 import { useStore } from '../store';
 
 export function ChatInput() {
@@ -26,7 +26,6 @@ export function ChatInput() {
       const data = await res.json();
 
       if (res.status === 422) {
-        // Validation failed — still show the YAML for inspection
         setYaml(data.yaml || '');
         setValidationErrors(data.validation?.errors || []);
         return;
@@ -62,13 +61,18 @@ export function ChatInput() {
   };
 
   return (
-    <div className="chat-input-wrapper">
+    <div className="orchestrator-card">
+      <div className="orchestrator-title">
+        <Sparkles size={14} />
+        Natural Language Orchestrator
+      </div>
+
       {validationErrors.length > 0 && (
         <div className="validation-errors">
           <div className="validation-header">
-            <span className="validation-title">⚠ Validation Errors</span>
+            <span className="validation-title">Validation Errors</span>
             <button className="retry-btn" onClick={handleRetry} disabled={loading}>
-              <RefreshCw size={14} /> Retry with error context
+              <RefreshCw size={12} /> Retry with error context
             </button>
           </div>
           <ul className="validation-list">
@@ -83,12 +87,12 @@ export function ChatInput() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="chat-input-container">
+      <form onSubmit={handleSubmit} className="prompt-area">
         <textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Deploy a Redis cluster with 3 replicas..."
-          className="chat-textarea"
+          placeholder="Describe the infrastructure changes...&#10;e.g., 'Deploy a Redis cluster with 3 replicas...'"
+          className="prompt-textarea"
           rows={3}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
@@ -96,8 +100,9 @@ export function ChatInput() {
             }
           }}
         />
-        <button type="submit" disabled={loading} className="chat-submit" title="Generate (Ctrl+Enter)">
-          {loading ? <RefreshCw size={20} className="spin" /> : <Send size={20} />}
+        <button type="submit" disabled={loading} className="generate-btn">
+          {loading ? <RefreshCw size={14} className="spin" /> : <Sparkles size={14} />}
+          Generate Manifest
         </button>
       </form>
     </div>
