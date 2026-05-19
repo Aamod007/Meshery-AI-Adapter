@@ -8,7 +8,7 @@ export function RecentActivity() {
 
   const handleUndo = async (id: string) => {
     try {
-      const res = await fetch(`http://localhost:8080/api/apply/${id}`, {
+      const res = await fetch(`/api/apply/${id}`, {
         method: 'DELETE'
       });
       if (res.ok) {

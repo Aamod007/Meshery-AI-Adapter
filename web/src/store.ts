@@ -19,6 +19,13 @@ interface ActivityItem {
   time: string;
 }
 
+interface GenerationMeta {
+  provider: string;
+  inputTokens: number;
+  outputTokens: number;
+  latencyMs: number;
+}
+
 interface AppState {
   yaml: string;
   setYaml: (yaml: string) => void;
@@ -26,8 +33,15 @@ interface AppState {
   lastPrompt: string;
   setLastPrompt: (p: string) => void;
 
+  promptHistory: string[];
+  addPromptHistory: (p: string) => void;
+
   validationErrors: { resource: string; field?: string; message: string }[];
-  setValidationErrors: (errs: AppState['validationErrors']) => void;
+  validationPassed: boolean | null;
+  setValidationErrors: (errs: AppState['validationErrors'], passed?: boolean) => void;
+
+  generationMeta: GenerationMeta | null;
+  setGenerationMeta: (meta: GenerationMeta | null) => void;
 
   history: HistoryItem[];
   addHistory: (item: HistoryItem) => void;
@@ -39,6 +53,12 @@ interface AppState {
 
   activities: ActivityItem[];
   addActivity: (a: ActivityItem) => void;
+
+  selectedProvider: string;
+  setSelectedProvider: (p: string) => void;
+
+  detectedSchemas: string[];
+  setDetectedSchemas: (schemas: string[]) => void;
 }
 
 export const useStore = create<AppState>((set) => ({
@@ -48,8 +68,17 @@ export const useStore = create<AppState>((set) => ({
   lastPrompt: '',
   setLastPrompt: (p) => set({ lastPrompt: p }),
 
+  promptHistory: [],
+  addPromptHistory: (p) => set((state) => ({
+    promptHistory: [p, ...state.promptHistory.filter((h) => h !== p)].slice(0, 10),
+  })),
+
   validationErrors: [],
-  setValidationErrors: (errs) => set({ validationErrors: errs }),
+  validationPassed: null,
+  setValidationErrors: (errs, passed) => set({ validationErrors: errs, validationPassed: passed ?? null }),
+
+  generationMeta: null,
+  setGenerationMeta: (meta) => set({ generationMeta: meta }),
 
   history: [],
   addHistory: (item) => set((state) => ({ history: [item, ...state.history] })),
@@ -70,4 +99,10 @@ export const useStore = create<AppState>((set) => ({
 
   activities: [],
   addActivity: (a) => set((state) => ({ activities: [a, ...state.activities].slice(0, 20) })),
+
+  selectedProvider: 'ollama',
+  setSelectedProvider: (p) => set({ selectedProvider: p }),
+
+  detectedSchemas: [],
+  setDetectedSchemas: (schemas) => set({ detectedSchemas: schemas }),
 }));

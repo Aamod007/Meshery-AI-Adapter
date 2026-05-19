@@ -657,3 +657,275 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
+
+/* ── Status Dots ────────────────────────────────────── */
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.dot-green { background: var(--accent-green); box-shadow: 0 0 6px rgba(63, 185, 80, 0.4); }
+.dot-red { background: var(--accent-red); box-shadow: 0 0 6px rgba(248, 81, 73, 0.4); }
+.dot-orange { background: var(--accent-orange); box-shadow: 0 0 6px rgba(210, 153, 34, 0.4); }
+
+.deployment-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Connect Button ─────────────────────────────────── */
+.connect-btn {
+  width: 100%;
+  padding: 5px 10px;
+  background: rgba(88, 166, 255, 0.1);
+  border: 1px solid rgba(88, 166, 255, 0.3);
+  border-radius: var(--radius);
+  color: var(--accent-blue);
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 6px;
+  transition: all 0.15s;
+}
+
+.connect-btn:hover {
+  background: rgba(88, 166, 255, 0.2);
+}
+
+.connect-modal {
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: rgba(255,255,255,0.03);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-light);
+}
+
+/* ── Orchestrator Header ────────────────────────────── */
+.orchestrator-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+/* ── Provider Selector ──────────────────────────────── */
+.provider-selector {
+  position: relative;
+}
+
+.provider-btn {
+  padding: 4px 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s;
+}
+
+.provider-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--text-primary);
+}
+
+.provider-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  z-index: 100;
+  min-width: 120px;
+}
+
+.provider-option {
+  width: 100%;
+  padding: 6px 12px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.provider-option:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--text-primary);
+}
+
+.provider-option.active {
+  background: rgba(88, 166, 255, 0.12);
+  color: var(--accent-blue);
+}
+
+/* ── Prompt History ─────────────────────────────────── */
+.history-toggle {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 3px 8px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  z-index: 10;
+  transition: all 0.15s;
+}
+
+.history-toggle:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--text-primary);
+}
+
+.prompt-history-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  z-index: 100;
+  width: 280px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.prompt-history-item {
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.prompt-history-item:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--text-primary);
+}
+
+/* ── Schema Chips ───────────────────────────────────── */
+.schema-chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.schema-label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.schema-chip {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: rgba(188, 140, 255, 0.1);
+  border: 1px solid rgba(188, 140, 255, 0.25);
+  border-radius: 12px;
+  color: var(--accent-purple);
+  font-weight: 500;
+}
+
+/* ── Validation Banner ──────────────────────────────── */
+.validation-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border-bottom: 1px solid var(--border);
+}
+
+.validation-banner.success {
+  background: rgba(63, 185, 80, 0.08);
+  color: var(--accent-green);
+}
+
+.validation-banner.error {
+  background: rgba(248, 81, 73, 0.08);
+  color: var(--accent-red);
+}
+
+/* ── Editor Footer (token metadata) ─────────────────── */
+.editor-footer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-top: 1px solid var(--border);
+  background: rgba(0,0,0,0.15);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.footer-sep {
+  color: var(--border);
+}
+
+/* ── Deployment Inline Undo ─────────────────────────── */
+.deployment-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.deployment-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.undo-inline-btn {
+  padding: 2px 6px;
+  background: rgba(248, 81, 73, 0.1);
+  border: 1px solid rgba(248, 81, 73, 0.25);
+  border-radius: 3px;
+  color: var(--accent-red);
+  font-size: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  transition: all 0.15s;
+}
+
+.undo-inline-btn:hover {
+  background: rgba(248, 81, 73, 0.2);
+}
+
+.undo-timer {
+  font-variant-numeric: tabular-nums;
+}
