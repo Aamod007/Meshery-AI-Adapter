@@ -1,9 +1,12 @@
 import { LayoutDashboard, Activity, History, Settings, Plus } from 'lucide-react';
-import { useState } from 'react';
 
-export function LeftSidebar() {
-  const [active, setActive] = useState('orchestration');
+interface LeftSidebarProps {
+  activeNav: string;
+  onNavChange: (nav: string) => void;
+  onDeploy: () => void;
+}
 
+export function LeftSidebar({ activeNav, onNavChange, onDeploy }: LeftSidebarProps) {
   const navItems = [
     { id: 'orchestration', label: 'Orchestration', icon: LayoutDashboard },
     { id: 'status', label: 'Status', icon: Activity },
@@ -20,21 +23,19 @@ export function LeftSidebar() {
           <span>Cluster: prod-us-east-1</span>
         </div>
       </div>
-
       <nav className="sidebar-nav">
         {navItems.map((item) => (
           <button
             key={item.id}
-            className={`nav-item ${active === item.id ? 'active' : ''}`}
-            onClick={() => setActive(item.id)}
+            className={`nav-item ${activeNav === item.id ? 'active' : ''}`}
+            onClick={() => onNavChange(item.id)}
           >
             <item.icon size={16} />
             {item.label}
           </button>
         ))}
       </nav>
-
-      <button className="sidebar-deploy-btn">
+      <button className="sidebar-deploy-btn" onClick={onDeploy}>
         <Plus size={14} />
         Deploy New Manifest
       </button>
